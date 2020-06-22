@@ -5,19 +5,25 @@
                 name="number1"
                 placeholder="Input your number here"
                 onchange={handleChangeEvent}>
-
             </lightning-input>
             <lightning-input value={number2} label="Number 2"
                 name="number2"
                 placeholder="Input your number here"
                 onchange={handleChangeEvent}>
-                
-            </lightning-input>
-            <lightning-button label="Sum" onclick={doSum}>
+            </lightning-input> <br/>
+            <lightning-button variant="brand" label="Sum" onclick={doSum}>
             </lightning-button>
             &nbsp;
-            <lightning-button label="Subtract" onclick={doSubt}>
+            <lightning-button variant="brand" label="Subtract" onclick={doSubt}>
             </lightning-button>
+            &nbsp;
+
+            <lightning-button variant="brand" label="Division" onclick={doDiv}>
+            </lightning-button>
+            &nbsp;
+            <lightning-button variant="brand" label="Multiplication" onclick={doMulti}>
+            </lightning-button>
+            
         </lightning-card>
 
     </div>

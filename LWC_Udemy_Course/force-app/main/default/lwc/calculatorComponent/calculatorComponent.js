@@ -21,4 +21,13 @@ export default class CalculatorComponent extends LightningElement {
         const subt = parseInt(this.number1) - parseInt(this.number2);
         alert(subt);
     }
+
+    doDiv(){
+        const div = parseInt(this.number1) / parseInt(this.number2);
+        alert(div);
+    }
+    doMulti(){
+        const mult = parseInt(this.number1) * parseInt(this.number2);
+        alert(mult);
+    }
 }
