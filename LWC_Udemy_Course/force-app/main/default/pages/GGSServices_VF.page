@@ -1,0 +1,245 @@
+<apex:page standardController="GGS__c" extensions="GGSServicesController_AC" applyBodyTag="false" showHeader="false" lightningStylesheets="true" 
+           action="{!setFields}">
+    <!--apex:slds /-->
+    <apex:pageMessages id="messages" />
+    
+    <script type="text/javascript">
+    	document.title = 'GGS AVT';
+    </script>
+    
+    <style type="text/css">
+        
+        div.container4 {
+        	height: auto;
+        	position: relative;
+        	overflow: auto;
+        	padding-bottom: 50px;
+        	padding-top: 5px;
+        }
+        
+        div.container4 p {
+        	margin-left: auto;
+        	margin-right: auto;
+        	margin-top: auto;
+        	margin-left: auto;
+        	width: 60%; 
+        	text-align: center;
+        }
+
+        label.lableFont {
+        	padding-top: 4px;
+        	font-weight: bold;
+        	color: #4a4a56;
+        	font-size: 10.92px;
+        }
+        
+        table.borderSpace {
+        	border-collapse: separate;
+        	border-spacing: 20px 0;
+        }
+        
+        th.topright { 
+        	vertical-align: top;
+  			text-align: right;
+        	width: 132px;
+        }
+        
+        .bPageBlock {
+        	border: none;
+        }
+        
+        .buttonEnabled {
+        	background:rgb(0, 112, 210) !important;
+        	color:rgb(255, 255, 255) !important;
+        }
+
+        .buttonDisabled {
+        	background:none !important;
+        }
+            
+    </style>
+    
+    <apex:form title="GGS Services">
+        
+        <apex:pageBlock >
+            <div style="text-align:center; font-size:40px; padding-top: 10px;">
+                <h1>Academic Violation Tracker</h1>
+            </div>
+            
+            <!-- Student and Faculty Detail section - Starts -->
+            <div style="font-size:14.196px;">
+                <h2>Student and Faculty Details</h2>
+            </div>
+            <hr/>
+            Please fill in any fields not populated.
+            <br/><br/>
+            
+            <apex:pageBlockSection columns="2">
+                <apex:inputText label="Instructor Name" value="{!instructorName}" id="instructorName" disabled="true"/>
+                <apex:inputField value="{!GGS__c.Course_ID__c}" html-disabled="true"/>
+                <apex:inputText label="Instructor IRN" value="{!instructorIRN}" id="instructorIRN" disabled="true"/>
+                <apex:inputField value="{!GGS__c.AVT_Course_Start_Date__c}" html-disabled="true"/>
+                <apex:inputText label="Student Name" value="{!studentName}" id="studentName" disabled="true"/>
+                <apex:inputField value="{!GGS__c.Group_ID__c}" html-disabled="true"/>
+                <apex:inputText label="Student IRN" value="{!studentIRN}" id="studentIRN" disabled="true"/>                    
+                
+            </apex:pageBlockSection>
+            <br/>
+            <!-- Student and Faculty Detail section - Ends -->
+            
+            <!-- Primary Issue section - Starts -->
+            <h3 style="font-weight: bold">Issue</h3>
+            <hr/>
+            <apex:pageBlockSection columns="1" id="section2">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Primary Issue" for="primaryIssue"/>
+                    <apex:actionRegion >
+                        <apex:inputField value="{!GGS__c.Primary_Issue__c}" id="primaryIssue">
+                            <apex:actionSupport event="onchange" reRender="outputPanel1, submitButton"/>
+                        </apex:inputField>
+                    </apex:actionRegion>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <!-- Primary Issue section - Ends -->
+            
+            <apex:outputPanel id="outputPanel1">
+                
+                <!-- Field Section Header - Renders according to picklist value for Primary Issue-->
+                <apex:outputPanel rendered="{!GGS__c.Primary_Issue__c != ''}">
+                    <br/>
+                    <div style="font-size:14.196px;">
+                        <apex:outputPanel rendered="{!GGS__c.Primary_Issue__c == 'Academic'}">
+                            <h2>Assignment Details</h2>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!GGS__c.Primary_Issue__c == 'Behavioral'}">
+                            <h2>Behavioral Details</h2>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!GGS__c.Primary_Issue__c == 'Supplemental/Professional Standards'}">
+                            <h2>Supplemental/Professional Standard Details</h2>
+                        </apex:outputPanel>
+                    </div>
+                    <hr/>
+                    <br/>
+                </apex:outputPanel>
+                
+                <!-- Academic field section - 2 columns - Starts -->
+                <apex:pageBlockSection id="section3" columns="2" rendered="{!GGS__c.Primary_Issue__c == 'Academic'}">
+                    <apex:inputField value="{!GGS__c.AVT_Assignment_Name__c}"/>
+                    <apex:inputField value="{!GGS__c.AVT_List_Week_Posted_To__c}" />
+                    <apex:inputField value="{!GGS__c.AVT_Assignment_Date__c}" />
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Have a SafeAssign Report" for="safeAssign_Report">
+                            <!--span class="Custom ToolTip text">
+                                <img src="/s.gif" alt="Help" class="helpIcon" title="{!$ObjectType.GGS__c.Fields.AVT_Have_a_SafeAssign_Report__c.inlineHelpText}"/>
+                            </span-->
+                        </apex:outputLabel>
+                        <apex:inputField value="{!GGS__c.AVT_Have_a_SafeAssign_Report__c}" id="safeAssign_Report"/>
+                    </apex:pageBlockSectionItem>
+                    <!--apex:pageBlockSectionItem ></apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem > 
+                        <div style="padding-left: 270px; font-weight:bold; vertical-align: top;">
+                            *If yes, please attach.
+                        </div>
+                    </apex:pageBlockSectionItem-->
+                    
+                </apex:pageBlockSection>
+                <!-- Academic field section - 2 columns - Ends -->
+                
+                <!-- Academic field section - 1 column - Starts -->
+                <apex:outputPanel rendered="{!GGS__c.Primary_Issue__c == 'Academic'}">
+                    <br/><br/><br/>
+                    <center>
+                        <table class="borderSpace">
+                            <tr>
+                                <th class="topright"><apex:outputLabel value="Class Sanctions" for="classSanctions" styleClass="lableFont"/></th>
+                                <th><apex:inputField value="{!GGS__c.AVT_Class_Sanctions__c}" style="width: 550px; height: 150px"
+                                                     id="classSanctions"/></th>
+                            </tr>
+                        </table>
+                        <div class="container4">
+                            <p>
+                                <strong>*PLEASE DO NOT SUBMIT THIS FORM IF YOU ONLY GAVE THE STUDENT A WARNING.</strong> Sanctions beyond a warning must 
+                                take place in order for the University of Phoenix administration to take action against students that are accused of academic 
+                                dishonesty. Classroom sanctions may include, but are not limited to resubmission of the assignment (possibly for fewer 
+                                or no points), failure on the assignment, additional assignment(s), reduction of the final course grade, failing grade 
+                                in the course. 
+                            </p>
+                        </div>                        
+                        
+                        <table class="borderSpace">
+                            <tr>
+                                <th class="topright"><apex:outputLabel value="Feedback Sent to Student" for="feedbackSentToStudent" styleClass="lableFont"/></th>
+                                <th><apex:inputField value="{!GGS__c.AVT_Feedback_Sent_to_Student__c}" style="width: 550px; height: 150px" 
+                                                     id="feedbackSentToStudent"/></th>
+                            </tr>
+                        </table>
+                        <div class="container4">
+                            <p>
+                                *Students should be notified and given a chance to respond to academic dishonesty allegations before this form is 
+                                filed with University of Phoenix Administration. If you need further guidance with this issue, please reach out to 
+                                <strong>ConductResolutions@phoenix.edu.</strong>
+                            </p>
+                        </div>
+                        
+                        <table class="borderSpace">
+                            <tr>
+                                <th class="topright"><apex:outputLabel value="Students Reaction" for="studentReaction" styleClass="lableFont"/></th>
+                                <th><apex:inputField value="{!GGS__c.AVT_Students_Reaction__c}" style="width: 550px; height: 150px" id="studentReaction"/></th>
+                            </tr>
+                        </table>
+                    </center>
+                </apex:outputPanel>
+                <!-- Academic field section - 1 column - Ends -->
+                
+                <!-- Behavioral and Supplemental/Professional Standards field section - Starts -->
+                <apex:outputPanel rendered="{!GGS__c.Primary_Issue__c == 'Behavioral' 
+                                            || GGS__c.Primary_Issue__c == 'Supplemental/Professional Standards'}">
+                    <center>
+                        <table class="borderSpace">
+                            <tr>
+                                <th class="topright"><apex:outputLabel value="Details" for="details" styleClass="lableFont"/></th>
+                                <th><apex:inputField value="{!GGS__c.Details__c}" style="width: 550px; height: 150px" id="details"/></th>
+                            </tr>
+                        </table>
+                        <br/>
+                        <br/>
+                        <table class="borderSpace">
+                            <tr>
+                                <th class="topright"><apex:outputLabel value="Feedback Sent to Student" for="feedbackSent" styleClass="lableFont"/></th>
+                                <th><apex:inputField value="{!GGS__c.AVT_Feedback_Sent_to_Student__c}" style="width: 550px; height: 150px" id="feedbackSent"/></th>
+                            </tr>
+                        </table>
+                    </center>
+                </apex:outputPanel>
+                <!-- Behavioral and Supplemental/Professional Standards field section -Ends -->
+                
+            </apex:outputPanel>
+            
+        </apex:pageBlock>      
+
+        <!-- Attach file section - Starts -->
+        <apex:pageBlock title="Attach File(s)">
+            <apex:pageBlockSection columns="1">
+                <apex:actionRegion >
+                    <apex:inputFile filename="{!fileName}" contentType="{!contentType}" value="{!afile}"/>
+                </apex:actionRegion>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        <!-- Attach file section - Ends -->
+        
+        <!-- Submit button - Starts -->
+        <apex:actionRegion >
+            <div align="center" style=" padding-bottom: 15px">
+                <apex:commandButton value="Submit"
+                                    title="Select a Primary Issue first"
+                                    styleClass="{!IF(GGS__c.Primary_Issue__c == '', 'buttonDisabled', 'buttonEnabled')}"
+                                    style="width:100px; height:35px; font-size: 1.15em;"
+                                    action="{!createCaseWithAttachment}" 
+                                    disabled="{!GGS__c.Primary_Issue__c == ''}"
+                                    id="submitButton"/>
+            </div>     
+        </apex:actionRegion>
+        <!-- Submit button - Starts -->
+        
+    </apex:form>
+</apex:page>
