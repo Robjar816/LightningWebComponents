@@ -1,0 +1,59 @@
+<!--
+ @description       : page for GGS Classroom Issue
+ @author            : Raj Rao
+ @group             : @last modified on : 10-12-2020
+ @last modified by  : Raj Rao
+ Modifications Log 
+ Ver   Date         Author    Modification
+ 1.0 10-12-2020 Raj Rao Initial Version
+-->
+<apex:page standardController="GGS__c" extensions="GGSClassroomIssueController_AC" tabStyle="GGS__c" sidebar="false" lightningStylesheets="true"
+    action="{!redirect}">
+    <apex:sectionHeader title="GGS Edit" subtitle="New GGS" />
+    <apex:form id="form">
+        <apex:pageBlock >
+            <apex:pageBlockButtons location="top">
+                <apex:commandButton value="Start Over" action="{!relatedTo}" rendered="{!showLookup}" />
+                <apex:commandButton value="Save" action="{!doSave}" />
+                <apex:commandButton value="Cancel" action="{!cancel}" />
+            </apex:pageBlockButtons>
+            <apex:pageMessages ></apex:pageMessages>
+            <apex:pageblockSection title="Issue Details" columns="2">
+                <apex:inputField value="{!GGS__c.Primary_Issue__c}" required="true" />
+                <apex:inputField value="{!GGS__c.Category__c}" required="true" />
+                <apex:inputField value="{!GGS__c.Secondary_Issue__c}" />
+                <apex:inputField value="{!GGS__c.Status__c}" />
+                <apex:inputField value="{!GGS__c.Details__c}" />
+                <apex:inputField value="{!GGS__c.Severity__c}" />
+            </apex:pageblockSection>
+            <apex:pageBlockSection title="Issue Related To" columns="2">
+                <apex:inputField value="{!GGS__c.Faculty_Name__c}" rendered="{!!showFacultyLookup}" />
+                <apex:commandButton action="{!fetchFacultyCourses}" value="Get Faculty Courses" rendered="{!!showFacultyLookup}" />
+                <apex:inputField value="{!GGS__c.Student_Name__c}" rendered="{!!showStudentLookup}" />
+                <apex:commandButton action="{!fetchStudentCourses}" value="Get Student Courses" rendered="{!!showStudentLookup}" />
+                <apex:outputField value="{!GGS__c.Faculty_Name__c}" rendered="{!showFacultyLookup}" />
+                <apex:outputField value="{!GGS__c.Student_Name__c}" rendered="{!showStudentLookup}" />
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+    <apex:form >
+        <apex:pageBlock >
+            <apex:pageBlockSection title="Faculty Course Information" rendered="{!showFacultyLookup}">
+                <apex:selectList value="{!selectedFacultyCourse}" multiselect="false" label="Select Faculty Course" title="Select Faculty Course"
+                    size="1" id="courses">
+                    <apex:actionSupport event="onchange" action="{!displayFacultyData}" reRender="out" />
+                    <apex:selectOptions value="{!FacultyCourseOptions}" id="course" />
+                </apex:selectList>
+                <apex:outputText value="{!selectedFacultyCourse}" label="You have selected:" id="out" />
+            </apex:pageBlockSection>
+            <apex:pageBlockSection title="Student Course Information" rendered="{!showStudentLookup}">
+                <apex:selectList value="{!selectedStudentCourse}" multiselect="false" label="Select Student Course" title="Select Student Course"
+                    size="1" id="courses">
+                    <apex:actionSupport event="onchange" action="{!displayStudentData}" reRender="out1" />
+                    <apex:selectOptions value="{!StudentCourseOptions}" id="course" />
+                </apex:selectList>
+                <apex:outputText value="{!selectedStudentCourse}" label="You have selected:" id="out1" />
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
