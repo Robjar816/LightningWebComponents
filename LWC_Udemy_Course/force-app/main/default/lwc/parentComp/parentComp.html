@@ -1,0 +1,13 @@
+<template>
+    <div class="slds-m-around+small" onsimple={handleSimpleEvent}>
+        <strong>I am inside Parent Comp</strong>
+        <br/>
+        <c-child-comp 
+            message="Message from Parent" 
+            pagenumber="23">
+            <!--onsimple={handleSimpleEvent}  ____ event handler for a custom event-->
+        </c-child-comp>
+        <br/>
+        <!--c-grandchild></!--c-grandchild-->
+    </div>
+</template>
