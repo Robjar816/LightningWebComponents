@@ -1,0 +1,189 @@
+<template>
+    <lightning-card title="Build Letter">
+        <div>
+            <template if:true={displaySpinner}>
+                <div>
+                    <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+                </div>
+            </template>                   
+
+            <lightning-layout horizontal-align="space">
+                <lightning-layout-item class="picklist-width-narrow" flexibility="auto" padding="around-small">
+                    <div>
+                        <lightning-combobox                        
+                        label="Folder"
+                        value={selectedFolder}
+                        placeholder="Select Folder"
+                        options={folderOptionList}
+                        onchange={onSelectFolder} ></lightning-combobox>
+                    </div>
+                </lightning-layout-item>                
+                
+                <lightning-layout-item class="picklist-width-wide" flexibility="auto" padding="around-small">
+                    <div>
+                        <lightning-combobox                
+                        name="template"
+                        label="Template"
+                        value={selectedTemplate}
+                        placeholder="Select Template"
+                        options={templateOptionList}
+                        onchange={onSelectEmailTemplate}></lightning-combobox>
+                    </div>
+                </lightning-layout-item>
+                
+                <lightning-layout-item class="picklist-width-narrow" flexibility="auto" padding="around-small">
+                    <div>
+                        <lightning-combobox
+                        name="signature"
+                        label="Signature"
+                        value={selectedSignature}
+                        placeholder="Select Signature"
+                        options={signatureOptionList}
+                        onchange={onSelectSignature}></lightning-combobox>
+                    </div>
+                </lightning-layout-item>
+
+            </lightning-layout>            
+
+            <div>
+                <div>                    
+                    <lightning-input-rich-text label="Letter Body" value={body} formats={formats} onchange={bodyUpdate}>
+                    </lightning-input-rich-text>
+                </div>
+            </div>
+            
+            <!-- ******************** BUTTONS START ******************** -->
+            <lightning-layout>
+                <lightning-layout-item padding="around-small">
+                    <!-- <div> -->
+                        <lightning-button variant="brand" label="Preview Letter" title="Preview Letter" onclick={previewLetter} class="slds-var-m-left_x-small"></lightning-button>
+                    <!-- </div>  -->
+                </lightning-layout-item>                                           
+
+                <lightning-layout-item padding="around-small">
+                    <!-- <div> -->
+                        <lightning-button variant="brand" label="Clear/Cancel" title="Clear Cancel" onclick={cancel} class="slds-var-m-left_x-small"></lightning-button>
+                    <!-- </div> -->
+                </lightning-layout-item>   
+
+                <lightning-layout-item padding="around-small">
+                    <div>
+                        <lightning-input type="checkbox" label="Send Email to Student?" name="sendEmail" value={sendEmail} onchange={checkSendStudentChange}></lightning-input>
+                    </div>                    
+                </lightning-layout-item>
+
+                <lightning-layout-item padding="around-small">
+                    <div>
+                        <lightning-button variant="brand" label="Save PDF" title="Save PDF" onclick={savePDF} class="slds-var-m-left_x-small"></lightning-button>
+                    </div>
+                </lightning-layout-item>                
+            </lightning-layout>
+
+            <template if:true={sendEmail}>
+                <div>
+                    <span class="text-bold">Selected Email(s):</span> {selectedEmail}
+                </div>
+            </template>
+            <template if:true={ccFaculty}>
+                <div>
+                    <span class="text-bold">Faculty Address:</span> {facultyEmail}
+                </div>
+            </template>
+            <template if:true={sendCcEmail}>
+                <div>
+                    <span class="text-bold">CC'd Address:</span> {additionalCC}
+                </div>
+            </template>
+            <!-- ******************** BUTTONS END ******************** -->
+
+            <!-- ******************** SELECT EMAIL MODAL START ******************** -->
+            <template if:true={showEmailModal}>
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <!-- modal header start -->
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeEmailModal}>
+                            <lightning-icon icon-name="utility:close"
+                            alternative-text="close"
+                            variant="inverse"
+                            size="small" ></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Select Email</h2>
+                    </header>
+                    <!-- modal body start -->
+                    <div class="slds-modal__content slds-var-p-around_medium" id="modal-content-id-1">
+                        <ul class="slds-m-around_medium">
+                            <template if:false={showOtherEmails}>
+                                <li>
+                                    <lightning-input type="checkbox" checked="true" label="All Student Emails" name="EmailSelection2" onchange={checkEmailChange2}></lightning-input>                       
+                                </li>                                    
+                            </template>                     
+                            <template if:true={showOtherEmails} for:each={emailOptions} for:item="email">
+                                <li key={email}>                                        
+                                    <lightning-input type="checkbox" label={email.label} value={email.value} name="EmailSelection" onchange={checkEmailChange}></lightning-input>                       
+                                </li>
+                            </template>
+                            <div>
+                                <hr class="rounded">
+                            </div>
+                            <div class="top-margin">
+                                <lightning-input type="checkbox" label="CC Faculty" value={ccFaculty} name="ccFaculty" onchange={onChangeCcFaculty}></lightning-input>
+                            </div>   
+                            <div>
+                                <hr class="rounded">
+                            </div> 
+                            <div class="top-margin">                            
+                                <lightning-input type="text" label="Add Email Address to CC:" name="additionalCC" value={additionalCC} onchange={onChangeManualCC}></lightning-input>
+                            </div>                                                                                                            
+                        </ul>
+                    </div>
+                    <!-- modal footer start-->
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick={closeEmailModal}>Close</button>
+                    </footer>
+                </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </template>
+            <!-- ******************** SELECT EMAIL MODAL END ******************** -->
+
+            
+            <!-- ******************** PREVIEW MODAL START ******************** -->
+            <template if:true={showModal}>
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <!-- modal header start -->
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                            <lightning-icon icon-name="utility:close"
+                            alternative-text="close"
+                            variant="inverse"
+                            size="small" ></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="modal-heading-02" class="slds-text-heading_medium slds-hyphenate">Letter Preview</h2>
+                    </header>
+                    <!-- modal body start -->
+                    <div class="slds-modal__content slds-var-p-around_medium" id="modal-content-id-2">
+                        <div>
+                            <img class="letterhead" style="width: 1000px; height: 100px;" src="https://apollogrp--c.na102.content.force.com/sfc/servlet.shepherd/version/renditionDownload?rendition=ORIGINAL_Jpg&versionId=0683Z00000ATFrn&operationContext=CHATTER&contentId=05T3Z000018NI3E" alt="UOP Header">
+                        </div>
+                        <div>                    
+                            <lightning-formatted-rich-text label="Letter Body Preview" value={body}>
+                            </lightning-formatted-rich-text>
+                        </div>                        
+                    </div>
+                    <!-- modal footer start-->
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick={closeModal}>Close</button>
+                    </footer>
+                </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </template>
+            <!-- ******************** PREVIEW MODAL END ******************** -->            
+
+        </div>       
+    </lightning-card>    
+</template>

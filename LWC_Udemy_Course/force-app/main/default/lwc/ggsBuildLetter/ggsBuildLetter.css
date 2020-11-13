@@ -1,0 +1,25 @@
+.top-margin {
+    margin-top: 25px;
+}
+
+.picklist-width-wide {
+    width: 500px;
+}
+
+.picklist-width-narrow {
+    width: 300px;
+}
+
+.letterhead {
+    width: 220px;
+    height: 55px;
+}
+
+.rounded-border {
+    border-top: 8px solid #bbb;
+    border-radius: 5px;
+}
+
+.text-bold {
+    font-weight: bold;
+}
