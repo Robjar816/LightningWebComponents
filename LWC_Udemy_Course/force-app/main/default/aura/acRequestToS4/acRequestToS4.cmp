@@ -1,0 +1,4 @@
+<aura:component  implements="flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickActionWithoutHeader,flexipage:availableForAllPageTypes" 
+ access="global" >
+ <c:lwcRequestToS4 recordId="{!v.recordId}" onshow="{!c.refreshMethod}" />
+</aura:component>
